@@ -29,15 +29,14 @@ while loop_cnt < LOOP_MAX:
     print("1:加算")
     print("2:減算")
     print("3:乗算")
-    print("4:徐算")
+    print("4:除算")
     print("9:終了")
 
-    ope = input("番号を入力して下さい=>")
+    ope = input("番号を入力して下さい =>")
     ope = int(ope)
 
     if ope == 9:
         break
-
     num_1 = input("左辺=>")
     num_2 = input("右辺=>")
 
@@ -46,6 +45,7 @@ while loop_cnt < LOOP_MAX:
 
     ans = 0
     ope_word = ""
+
     if ope == 1:
         ans = num_1 + num_2
         ope_word = "+"
@@ -59,8 +59,8 @@ while loop_cnt < LOOP_MAX:
         ans = num_1 / num_2
         ope_word = "/"
 
-    msg_ans = "{num_1}{ope_word}{num_2}={ans}".format(num_1=num_1,ope_word=ope_word,num_2=num_2,ans=ans)
+    msg_ans = "{num_1} {ope_word} {num_2} = {ans}".format(num_1=num_1, ope_word = ope_word, num_2 = num_2, ans = ans)
     print(msg_ans)
-    print("_"*30)
 
+    print("-" * 30)
     loop_cnt += 1
