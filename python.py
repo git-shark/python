@@ -32,14 +32,14 @@ while loop_cnt < LOOP_MAX:
     print("4:商")
     print("9:終")
 
-    ope = input("数値を選択して下さい")
+    ope = input("上記の数値を選択")
     ope = int(ope)
 
     if 9 == ope:
         break
 
-    num_1 = input("左辺の値を入力して下さい=>")
-    num_2 = input("右辺の値を入力して下さい=>")
+    num_1 = input("左辺の値を入力して下さい==>")
+    num_2 = input("右辺の値を入力して下さい==>")
 
     num_1 = int(num_1)
     num_2 = int(num_2)
