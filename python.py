@@ -22,21 +22,24 @@
 #    if ope == "1":
 #        break
 
-LOOP_MAX = 5
+LOOP_MAX = 3
 loop_cnt = 0
 
 while loop_cnt < LOOP_MAX:
-    print("1:加算")
-    print("2:減算")
-    print("3:乗算")
-    print("4:除算")
-    print("9:終了")
-    ope = input("1〜4を選択して下さい")
+    print("1:和")
+    print("2:差")
+    print("3:積")
+    print("4:商")
+    print("9:終")
+
+    ope = input("数値を選択して下さい")
     ope = int(ope)
-    if ope == 9:
+
+    if 9 == ope:
         break
-    num_1 = input("左辺を入力して下さい =>")
-    num_2 = input("右辺を入力して下さい =>")
+
+    num_1 = input("左辺の値を入力して下さい=>")
+    num_2 = input("右辺の値を入力して下さい=>")
 
     num_1 = int(num_1)
     num_2 = int(num_2)
@@ -44,21 +47,22 @@ while loop_cnt < LOOP_MAX:
     ans = 0
     ope_word = ""
 
-    if ope == 1:
+    if 1 == ope:
         ans = num_1 + num_2
         ope_word = "+"
-    elif ope == 2:
+    elif 2 == ope:
         ans = num_1 - num_2
         ope_word = "-"
-    elif ope == 3:
+    elif 3 == ope:
         ans = num_1 * num_2
         ope_word = "*"
-    elif ope == 4:
+    elif 4 == ope:
         ans = num_1 / num_2
-        ope_word = "/"
+        ope_word = "*"
 
-    msg_ans = "{num_1} {ope_word} {num_2} = {ans}".format(num_1 = num_1, num_2 = num_2, ans = ans)
+    msg_ans = "{num_1}{ope_word}{num_2}={ans}".format(num_1=num_1,ope_word=ope_word,num_2=num_2,ans=ans)
     print(msg_ans)
-    #print("{num_1}{ope_word}{num_2}={ans}".format(num_1=num_1, num_2=num_2, ope_word=ope_word, ans=ans))
-    print("-"*30)
+
+    print("-"*40)
+
     loop_cnt += 1
