@@ -17,8 +17,17 @@ tuple = (
     "c"
 )
 
+dict = {
+    "key":10
+    "キー":20
+    "きー":30
+    }
+
 for list_data in list:
     print(list_data)
 
 for tuple_data in tuple:
     print(tuple_data)
+
+for dict_key in dict:
+    print(dict_key)
