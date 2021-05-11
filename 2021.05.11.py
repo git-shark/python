@@ -50,11 +50,9 @@ def func_average(prm_list):
         sum += num
 
     average = sum / list_len
-    return sum, average
+    return (sum, average)
 
-res = func_average(list)        #戻り値 = (1500, 300.0)
-sum = func_average(list)[0]
-average = func_average(list)[1]
-print("{0}".format(res))
+sum,average = func_average(list)
+
 print("合計:={0}".format(sum))
 print("平均:={0}".format(average))
