@@ -1,5 +1,5 @@
 
-LOOP_MAX = 3
+LOOP_MAX = 1
 loop_cnt = 0
 
 ope_menu = ["加算:1","減算:2","乗算:3","除算:4","終了:9"]
@@ -43,5 +43,20 @@ while loop_cnt < LOOP_MAX:
     loop_cnt += 1
 
     print("-"*100)
+
+def func_average(prm_list):
+    list_len = len(prm_list)
+
+    sum = 0
+
+    for num in prm_list:
+        sum += num
+
+    average = sum / list_len
+    print("平均値=",average)
+
+list = [10, 20, 30]
+
+func_average(list)
 
 
