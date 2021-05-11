@@ -44,15 +44,20 @@ dict_2 = {"0":1,"1":2,"2":3}
 third_dict = {"key":dict_2}
 print(third_dict)
 
+
+#【飯類】
+#・チャーハン
+#・ピラフ
+#・マーボー丼
+
 rice_list = ["チャーハン","ピラフ","マーボー丼"]
-bread_list = ["サンドイッチ","バータトースト","フランスパン"]
-noodle_list = ["ラーメン","パスタ","ソバ"]
+bread_list = ["サンドイッチ","バタートースト","フランスパン"]
+noodle_list = ["ラーメン","パスタ","焼きそば"]
 
-food_dict = {"飯類":rice_list,"パン類":bread_list,"麺類":noodle_list}
+food_type = {"飯類":rice_list,"パン類":bread_list,"麺類":noodle_list}
 
-for food_type,food_list in food_dict.items():
-    print("【{0}】".format(food_type))
-
-    for food in food_list:
-        print("・{0}".format(food))
-    print("")
+for type, list in food_type.items():
+    print("【{0}】".format(type))
+    for food in list:
+        print("{0}".format(food))
+    print("\n")
