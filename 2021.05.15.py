@@ -50,12 +50,46 @@ while loop_cnt < LOOP_MAX:
         print("例外が発生しました:{0}".format(e))
         sys.exit(1)
 
-    msg_ans = "{num_1}{ope_word}{num_2} = {ans}".format(num_1=num_1,ope_word=ope_word,num_2=num_2,ans=ans)
+    msg_ans = "{num_1} {ope_word} {num_2} = {ans}".format(num_1=num_1,ope_word=ope_word,num_2=num_2,ans=ans)
 
-    print(msg_ans)
+    print("("+msg_ans+")")
 
     print("-"*60)
 
     loop_cnt += 1
 
+    """
+    ここはコメント
+    """
+
 input("Enterキーで終了")
+
+def func_test(param):
+    pass
+
+val_1 = func_test("test")  #関数に戻り値がない為に『データがない』
+print(val_1)
+
+val_2 = ""                 #空文字という『データがある』
+print(val_2)
+
+if val_1 is None:
+    print("val_1にはデータが存在しません")
+else:
+    print("val_1にはデータが存在します")
+
+if val_2 is None:
+    print("val_2にはデータが存在しません")
+else:
+    print("val_2にはデータが存在します")
+
+
+score = input("点数を入力してください=>")
+score = int(score)
+
+pass_line = 80
+msg = ""
+
+msg = "合格" if score >= pass_line else "不合格"
+
+print("{0}点は{1}です".format(score, msg))
