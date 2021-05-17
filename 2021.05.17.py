@@ -1,7 +1,7 @@
-# -*- conding: utf-8 -*-
+#-*- coding: utf-8 -*-
 import sys
 
-menu_list = ["1:加算","2:減算","3:乗算","4:除算","5:終了"]
+menu_list = ["1:加算", "2:減算", "3:乗算", "4:除算","5:終了"]
 
 def get_menu():
     for menu in menu_list:
@@ -41,15 +41,15 @@ loop_cnt = 0
 while loop_cnt < LOOP_MAX:
     ope = get_menu()
 
-    if ope == 5:
+    if ope == 9:
         break
 
     if ope is None or ope < 1 or ope > 4:
         print("1〜5を入力してください")
         continue
 
-    num_1 = input("左辺を入力してください")
-    num_2 = input("右辺を入力してください")
+    num_1 = input("左辺を入力してください=>")
+    num_2 = input("右辺を入力してください=>")
 
     num_1 = num_1 if num_1.isdigit() else None
     num_2 = num_2 if num_2.isdigit() else None
@@ -64,15 +64,14 @@ while loop_cnt < LOOP_MAX:
     try:
         ans, ope_word = do_calc(ope)
     except Exception as e:
-        print("例外が発生しました:{0}".format(e))
+        print("例外が発生しました:{0}".format(e))
         sys.exit(1)
 
-    msg_ans = "{num_1}{ope_word}{num_2}={ans}".format(num_1=num_1, ope_word=ope_word, num_2=num_2, ans=ans)
+    msg_ans = "{num_1}{ope_word}{num_2}={ans}".format(num_1=num_1,ope_word=ope_word,num_2=num_2, ans=ans)
     print(msg_ans)
 
     print("-"*60)
 
     loop_cnt += 1
 
-input("Enterキーで終了")
-
+input("Enterで終了")
