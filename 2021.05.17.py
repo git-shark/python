@@ -41,7 +41,7 @@ loop_cnt = 0
 while loop_cnt < LOOP_MAX:
     ope = get_menu()
 
-    if ope == 9:
+    if ope == 5:
         break
 
     if ope is None or ope < 1 or ope > 4:
@@ -75,3 +75,4 @@ while loop_cnt < LOOP_MAX:
     loop_cnt += 1
 
 input("Enterで終了")
+
