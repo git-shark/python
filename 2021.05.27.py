@@ -1,10 +1,8 @@
 import re
 
-sentence_list = ["電話番号は0120-0000-0000だったかな",
-"0120-0-0000かもね",
-"0120-0000-0000で間違いない"]
+sentence_list = ["電話番号は0120-000-0000だったかな","0120-0-0000かもね","0120-0000-0000で間違いない"]
 
-pattern = "0120-[0-9]{2,4}-[0-9]{4}"
+pattern = "0120-[0-9]{1,4}-[0-9]{4}"
 
 for sentence in sentence_list:
     match = re.match(pattern, sentence)
