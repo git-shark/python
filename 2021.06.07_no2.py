@@ -1,39 +1,17 @@
-class Test:
-    def __init__(self, pub_val = "pub", pri_val = "pri"):
-        self.pub_val = pub_val
-        self.__pri_val = pri_val
-
-    def set_pri_val(self, pri_val = "pri"):
-        self.__pri_val = pri_val
-
-    def get_pri_val(self):
-        return self.__pri_val
-
-test = Test()
-print(test.pub_val)
-print(test.get_pri_val())
-test.set_pri_val("PRI")
-print(test.get_pri_val())
-
 class ParentClass:
-
     parent_static_val = "親の静的変数"
-
-    def __init__(self, parent_self_val = "親のインスタンス変数"):
+    def __init__(self, parent_self_val = "親インスタンスの値"):
         print("parentコンストラクタ")
         self.parent_self_val = parent_self_val
-
     def func_parent(self):
         print("parentメソッド")
 
 class ChildClass(ParentClass):
-
     child_static_val = "子の静的変数"
-
-    def __init__(self, child_self_val = "子のインスタンス変数"):
+    def __init__(self, child_self_val = "子インスタンスの値"):
+        super().__init__()
         print("childコンストラクタ")
         self.child_self_val = child_self_val
-
     def func_child(self):
         print("childメソッド")
 
@@ -48,4 +26,5 @@ print(childClass.child_static_val)
 print(childClass.parent_static_val)
 
 print(childClass.child_self_val)
-print(childClass.parent_self_val)
+print(childClass.parent_self_val)  #この値を得るには、子クラスから明示的に親クラスの初期化を促さなければならない
+                                   #super().__init__()を使用する
