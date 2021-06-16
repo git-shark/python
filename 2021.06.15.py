@@ -3,3 +3,4 @@ import pyautogui
 
 coord = pyautogui.position()
 print(coord)
+#テスト
