@@ -14,6 +14,7 @@ def OnPaint(event):
     for i in range(BoardHeight):
         for j in range(BoardWidth):
             shape = board[i][j]
+            print(board)
             if shape != 0:
                 [x, y] = [j * PieceSize, i * PieceSize]
 
@@ -42,7 +43,7 @@ def Main():
     global PanelWidth, PanelWidth
     global colors, light, dark
     global board
-
+#PieceSize = 0-19
     [PieceSize, BoardWidth, BoardHeight] = [20, 10, 22]
     PanelWidth = PieceSize * BoardWidth
     PanelHeight = PieceSize * BoardHeight
@@ -69,5 +70,5 @@ if __name__ == "__main__":
     import wx
     app = wx.App()
     Main()
-    board[4][5] = 1
+    board[1][5] = 1 #board 0-9 or 0-21
     app.MainLoop()
