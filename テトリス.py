@@ -30,9 +30,9 @@ def CheckMoveAvailable(check_board, block_coords, x, y):
     for i in range(4):
         piece_x = block_coords[i][0] + x
         piece_y = block_coords[i][1] + y
-        if piece_x < 0 or piece_x > BoardWidth-1 or \
-            piece_y < 0 or piece_y > BoardHeight-1 \
-                or check_board[piece_y][piece_x] != 0:
+        if piece_x < 0 or piece_x > BoardWidth - 1 or\
+            piece_y < 0 or piece_y > BoardHeight - 3 or\
+                check_board[piece_y][piece_x] != 0:
             return False
         return True
 
@@ -47,18 +47,18 @@ def OnKeyDown(event):
     keycode = event.GetKeyCode()
     if keycode == wx.WXK_LEFT or keycode == wx.WXK_RIGHT:
         copy_board = copy.deepcopy(board)
-        setBlockCoords(copy_board, curBlockCoords, curX, curY, 0)
+        SetBlockOnBoard(copy_board, curBlockCoords, curX, curY, 0)
         nextBlockCoords = copy.deepcopy(curBlockCoords)
         [nextX, nextY] = [curX, curY]
 
-    if keycode == wx.WXK_LEFT:
-        nextX = curX -1
-    elif keycode == wx.WXK_RIGHT:
-        nextX = curX + 1
+        if keycode == wx.WXK_LEFT:
+            nextX = curX - 1
+        elif keycode == wx.WXK_RIGHT:
+            nextX = curX + 1
 
-    if checkMoveAvailable(copy_board, next_BlockCoords, nextX, nextY):
-        DrawBlock(copy_board, nextBlockCoords, nextX, nextY, curShape)
-        isCurBlock = True
+        if CheckMoveAvailable(copy_board, nextBlockCoords, nextX, nextY):
+            DrawBlock(copy_board, nextBlockCoords, nextX, nextY, curShape)
+            isCurBlock = True
     isKeyDown = False
 
 def OnTimer(event):                    #event=panel、慣例で仮引数には(event)表記を用いる
@@ -81,10 +81,10 @@ def OnTimer(event):                    #event=panel、慣例で仮引数には(e
             isCurBlock = True
     else:
         SetBlockOnBoard(copy_board, curBlockCoords, curX, curY, 0)
-        if not CheckMoveAvailable(copy_board, curBlockCoords, curX, curY+1):
+        if not CheckMoveAvailable(copy_board, curBlockCoords, curX, curY + 1):
             isCurBlock = False
         else:
-            DrawBlock(copy_board, curBlockCoords, curX, curY+1, curShape)
+            DrawBlock(copy_board, curBlockCoords, curX, curY + 1, curShape)
     keyAllowed = True
 
 def OnPaint(event):
