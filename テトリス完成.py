@@ -8,12 +8,6 @@ from pdb import set_trace
 # __main__とは「ファイルやコマンドラインから直接起動したよ」の意味
 # ※それ以外からの起動では、そのプログラム名が__name__に代入される
 
-#isとは、オブジェクト同士を比較する演算子である
-#x=[1, 2]
-#y=[1, 2]
-# x == y => True
-# x is y => False
-
 # イベント発生 → 処理 = イベントドリブン
 # 処理プログラム      = イベントハンドラ (コールバック関数)
 
@@ -22,6 +16,14 @@ from pdb import set_trace
 
 #【関数】
 #obj.GetEventObject = イベントを発生したオブジェクトを取得するメソッド
+
+# obj in obj  (例) 0 in obj[i]
+
+#isとは、オブジェクト同士を比較する演算子である
+#x=[1, 2]
+#y=[1, 2]
+# x == y => True
+# x is y => False
 
 #【フラグ種】
 #isCurBlock = ブロック描写フラグ
@@ -48,8 +50,8 @@ def DrawBlock(copy_board, block_coords, x, y, block_shape):       #blockを描�
     board = copy.deepcopy(copy_board)
     curBlockCoords = copy.deepcopy(block_coords)
     [curShape, curX, curY] = [block_shape, x, y]
-    panel.Refresh()                                         #前データ削除後の「再描画」
-                                                            #描写後「描写イベントメッセージ(EVT_PAINT)が発生」
+    panel.Refresh()                                 #前データ削除 => 再描画 => EVT_PAINT発生 => コールバック関数OnPaint()へ続く
+                                                    #描写後「描写イベントメッセージ(EVT_PAINT)が発生」
 
 def CheckMoveAvailable(check_board, block_coords, x, y):
     for i in range(4):
@@ -64,8 +66,7 @@ def CheckMoveAvailable(check_board, block_coords, x, y):
 def CheckDelLine(check_board):
     delLineNumb = BoardHeight
     for i in range(BoardHeight):
-        if not (0 in check_board[i]):
-            delLineNumb = i
+        if not (0 in check_board[i]): delLineNumb = i
     return delLineNumb
 
 def OnKeyDown(event):
@@ -126,7 +127,7 @@ def OnTimer(event):                                      #event=panel、※慣�
         if delLineNumb < BoardHeight and delLineNumb != 0:
             del board[delLineNumb]
             board.insert(0, [0] * BoardWidth)
-            panel.Refresh()
+            panel.Refresh()                               #前データ削除 => 再描画 => EVT_PAINT発生 => コールバック関数OnPaint()へ続く
         else:
             newShape = random.randint(1, 7)
             newBlockCoords = copy.deepcopy(BlockTable[newShape])
@@ -140,7 +141,7 @@ def OnTimer(event):                                      #event=panel、※慣�
                         board_row = [0] * BoardWidth
                         board.append(board_row)
                     [isCurBlock, keyAllowed, isKeyDown] = [False] * 3
-                    Speed = 200
+                    Speed = 70
                     event.GetTimer().Start(Speed)
                 return
             else:
@@ -156,12 +157,10 @@ def OnTimer(event):                                      #event=panel、※慣�
 
 def OnPaint(event):                  #event=panel
     obj = event.GetEventObject()     #obj = panel  ※GetEventObject()はイベント発生源のobjを取得
-    print(wx.BufferedPaintDC(obj))
     dc = wx.BufferedPaintDC(obj)     #図形を描くキャンパスのobj(panel)を指定し描写も行う
-                                     #wx.BufferdPaintDC(obj)処理開始 → for文 → wx.BufferdPaintDC処理終了(描写) → Clear
-                                     #22回の内部処理がある為にパファに格納し最後に描写する ※チラつき防止
-    #dc.Clear()                       #描写後のデータを削除している 落下1段毎にClearしている。Clear後はnoneになる
-    print('消したよ=>', dc.Clear())
+                                     #wx.BufferdPaintDC(obj)処理開始 → for文 → wx.BufferdPaintDC処理終了(描写) → Clear   ???未確認
+                                     #一段毎にパファに格納し処理終了後に描写する ※チラつき防止
+    dc.Clear()                       #描写後のデータを削除している 落下1段毎にClearしている。Clear後はnoneになる
 
     for i in range(BoardHeight):
         for j in range(BoardWidth):
@@ -186,7 +185,7 @@ def OnPaint(event):                  #event=panel
                 dc.SetPen(wx.TRANSPARENT_PEN)
                 dc.SetBrush(wx.Brush(colors[shape]))
                 dc.DrawRectangle(x + 1, y + 1, PieceSize - 2, PieceSize - 2)
-    print('終わり')
+    #print('ブロック描写完了')
 
 def OnEraseBackground(event):
     pass
@@ -257,7 +256,7 @@ def Main():
     ID_TIMER = 1
     timer = wx.Timer(panel, ID_TIMER)                 #panelのIDを1としている
     panel.Bind(wx.EVT_TIMER, OnTimer, id=ID_TIMER)    #タイマーイベント発生毎に、コールバック関数OnTimeを実行
-    Speed = 300                                       #ミリ秒
+    Speed = 100                                       #ミリ秒
     timer.Start(Speed)                                #100ms毎にイベント(EVT_TIMER)発生
     panel.Bind(wx.EVT_CHAR_HOOK, OnKeyDown)
     frame.Center()
