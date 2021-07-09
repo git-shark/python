@@ -1,48 +1,12 @@
 # -*- coding: utf-8 -*-
-from pdb import set_trace
 
-#【__name__と'__main__について】
-# pythonはプログラムを走らせると変数__name__に文字列'__main__'を自動的に代入する
-# プログラムが直接起動(コマンドライン、ファイル)からの場合、
-# 自動で__name__に文字列'__main__が代入される
-# __main__とは「ファイルやコマンドラインから直接起動したよ」の意味
-# ※それ以外からの起動では、そのプログラム名が__name__に代入される
-
-# イベント発生 → 処理 = イベントドリブン
-# 処理プログラム      = イベントハンドラ (コールバック関数)
-
-# board = list型 0-9 or 0-21 の範囲をとる
-# 描写直前まで意図しない挙動を避けcopy_boardで作業を行う
-
-#【関数】
-#obj.GetEventObject = イベントを発生したオブジェクトを取得するメソッド
-
-# obj in obj  (例) 0 in obj[i]
-
-#isとは、オブジェクト同士を比較する演算子である
-#x=[1, 2]
-#y=[1, 2]
-# x == y => True
-# x is y => False
-
-#【フラグ種】
-#isCurBlock = ブロック描写フラグ
-#keyAllowed = 一連的なkey処理の状態
-#isKeyDown  = keyの1入力のみを受付  ※連続的key入力 → 処理終了まで他key入力を受付しない
-
-#cur	    カー          雑種
-#coords	    コーズ        領域
-#Available	アベイラブル  利用可能な空白
-#allowed	アラウド      許容
-#row        ロウ          行
-
-def SetBlockOnBoard(set_board, block_coords, x, y, block_shape):  #boardにblockcoordsを代入
+def SetBlockOnBoard(set_board, block_coords, x, y, block_shape):
     for i in range(4):
         piece_x = block_coords[i][0] + x
         piece_y = block_coords[i][1] + y
         set_board[piece_y][piece_x] = block_shape
 
-def DrawBlock(copy_board, block_coords, x, y, block_shape):       #blockを描く
+def DrawBlock(copy_board, block_coords, x, y, block_shape):
     global board
     global curBlockCoords, curShape, curX, curY
 
@@ -50,8 +14,7 @@ def DrawBlock(copy_board, block_coords, x, y, block_shape):       #blockを描�
     board = copy.deepcopy(copy_board)
     curBlockCoords = copy.deepcopy(block_coords)
     [curShape, curX, curY] = [block_shape, x, y]
-    panel.Refresh()                                 #前データ削除 => 再描画 => EVT_PAINT発生 => コールバック関数OnPaint()へ続く
-                                                    #描写後「描写イベントメッセージ(EVT_PAINT)が発生」
+    panel.Refresh()
 
 def CheckMoveAvailable(check_board, block_coords, x, y):
     for i in range(4):
@@ -92,12 +55,8 @@ def OnKeyDown(event):
             nextX = curX + 1
         elif keycode == wx.WXK_DOWN:
             for i in range(4):
-                nextBlockCoords[i][0] = -curBlockCoords[i][1] #右辺の-curBlockCoords[x][x]で符号計算をしている(マイナス化)
+                nextBlockCoords[i][0] = -curBlockCoords[i][1]
                 nextBlockCoords[i][1] = curBlockCoords[i][0]
-                #print('0(+)',curBlockCoords[i][0])          ※チェック用
-                #print('0(-)',-curBlockCoords[i][0])
-                #print('1(+)',curBlockCoords[i][1])
-                #print('1(-)',-curBlockCoords[i][1])
         elif keycode == wx.WXK_UP:
             for i in range(4):
                 nextBlockCoords[i][0] = curBlockCoords[i][1]
@@ -113,10 +72,10 @@ def OnKeyDown(event):
             isCurBlock = True
     isKeyDown = False
 
-def OnTimer(event):                                      #event=panel、※慣例で仮引数(event)表記を用いる
-    global isCurBlock, keyAllowed, isKeyDown, board      #各フラグをグローバル化
+def OnTimer(event):
+    global isCurBlock, keyAllowed, isKeyDown, board
 
-    if event.GetId() != ID_TIMER or isKeyDown is True:   #panelにBindされているイベント発生先の判定
+    if event.GetId() != ID_TIMER or isKeyDown is True:
         return
 
     keyAllowed = False
@@ -127,14 +86,14 @@ def OnTimer(event):                                      #event=panel、※慣�
         if delLineNumb < BoardHeight and delLineNumb != 0:
             del board[delLineNumb]
             board.insert(0, [0] * BoardWidth)
-            panel.Refresh()                               #前データ削除 => 再描画 => EVT_PAINT発生 => コールバック関数OnPaint()へ続く
+            panel.Refresh()
         else:
             newShape = random.randint(1, 7)
             newBlockCoords = copy.deepcopy(BlockTable[newShape])
             [newX, newY] = [int(BoardWidth / 2), 1]
             if not CheckMoveAvailable(copy_board, newBlockCoords, newX, newY):
                 event.GetTimer().Stop()
-                yesno = wx.MessageBox('もう一度始めますか？', '', wx.YES_NO)   #再スタート
+                yesno = wx.MessageBox('もう一度始めますか？', '', wx.YES_NO)
                 if yesno == wx.YES:
                     board = []
                     for i in range(BoardHeight):
@@ -148,19 +107,17 @@ def OnTimer(event):                                      #event=panel、※慣�
                 DrawBlock(copy_board, newBlockCoords, newX, newY, newShape)
                 isCurBlock = True
     else:
-        SetBlockOnBoard(copy_board, curBlockCoords, curX, curY, 0)            #前回のブロックを消去
+        SetBlockOnBoard(copy_board, curBlockCoords, curX, curY, 0)
         if not CheckMoveAvailable(copy_board, curBlockCoords, curX, curY+1):
             isCurBlock = False
         else:
             DrawBlock(copy_board, curBlockCoords, curX, curY + 1, curShape)
     keyAllowed = True
 
-def OnPaint(event):                  #event=panel
-    obj = event.GetEventObject()     #obj = panel  ※GetEventObject()はイベント発生源のobjを取得
-    dc = wx.BufferedPaintDC(obj)     #図形を描くキャンパスのobj(panel)を指定し描写も行う
-                                     #wx.BufferdPaintDC(obj)処理開始 → for文 → wx.BufferdPaintDC処理終了(描写) → Clear   ???未確認
-                                     #一段毎にパファに格納し処理終了後に描写する ※チラつき防止
-    dc.Clear()                       #描写後のデータを削除している 落下1段毎にClearしている。Clear後はnoneになる
+def OnPaint(event):
+    obj = event.GetEventObject()
+    dc = wx.BufferedPaintDC(obj)
+    dc.Clear()
 
     for i in range(BoardHeight):
         for j in range(BoardWidth):
@@ -185,7 +142,6 @@ def OnPaint(event):                  #event=panel
                 dc.SetPen(wx.TRANSPARENT_PEN)
                 dc.SetBrush(wx.Brush(colors[shape]))
                 dc.DrawRectangle(x + 1, y + 1, PieceSize - 2, PieceSize - 2)
-    #print('ブロック描写完了')
 
 def OnEraseBackground(event):
     pass
@@ -215,7 +171,6 @@ def Main():
     ShapeSquare = [[0, 0], [1, 0], [0, 1], [1, 1]]
     ShapeL = [[-1, -1], [0, -1], [0, 0], [0, 1]]
     ShapeMirroredL = [[1, -1], [0, -1], [0, 0], [0, 1]]
-    #Shape_x = [[x,y],[x,y],[x,y],[x,y]]
 
     BlockTable = [ShapeNo, ShapeZ, ShapeS, ShapeLine, ShapeT,\
         ShapeSquare, ShapeL, ShapeMirroredL]
@@ -224,22 +179,11 @@ def Main():
         wx.Colour('BLUE'), wx.Colour('YELLOW'), wx.Colour('CYAN'),\
         wx.Colour('LIGHT BLUE'), wx.Colour('VIOLET RED')]
 
-        #['BLACK', wx.Colour(255, 0, 0, 255), wx.Colour(0, 255, 0, 255),
-        # wx.Colour(0, 0, 255, 255), wx.Colour(255, 255, 0, 255),
-        # wx.Colour(0, 255, 255, 255), wx.Colour(191, 216, 216, 255),
-        # wx.Colour(204, 50, 153, 255)]
-
     light = ['BLACK']
     dark = ['BLACK']
     for i in range(1, 8):
         light.append(colors[i].ChangeLightness(150))
         dark.append(colors[i].ChangeLightness(50))
-
-    #print(light)↓   ※appendで追記しているのでlight[0]の'BLACK'も存在している
-    #['BLACK', wx.Colour(255, 127, 127, 255), wx.Colour(127, 255, 127, 255),
-    # wx.Colour(127, 127, 255, 255), wx.Colour(255, 255, 127, 255),
-    # wx.Colour(127, 255, 255, 255), wx.Colour(223, 235, 235, 255),
-    # wx.Colour(229, 152, 204, 255)]
 
     board = []
 
@@ -251,13 +195,13 @@ def Main():
     frame.SetClientSize(PanelWidth, PanelHeight)
     panel = wx.Panel(frame)
     panel.SetBackgroundColour('BLACK')
-    panel.Bind(wx.EVT_PAINT, OnPaint)                 #panel.Refresh()実行 => (EVT_PAINT)が発生 => OnPaint関数へ ※コールバック関数
+    panel.Bind(wx.EVT_PAINT, OnPaint)
     panel.Bind(wx.EVT_ERASE_BACKGROUND, OnEraseBackground)
     ID_TIMER = 1
-    timer = wx.Timer(panel, ID_TIMER)                 #panelのIDを1としている
-    panel.Bind(wx.EVT_TIMER, OnTimer, id=ID_TIMER)    #タイマーイベント発生毎に、コールバック関数OnTimeを実行
-    Speed = 100                                       #ミリ秒
-    timer.Start(Speed)                                #100ms毎にイベント(EVT_TIMER)発生
+    timer = wx.Timer(panel, ID_TIMER)
+    panel.Bind(wx.EVT_TIMER, OnTimer, id=ID_TIMER)
+    Speed = 100
+    timer.Start(Speed)
     panel.Bind(wx.EVT_CHAR_HOOK, OnKeyDown)
     frame.Center()
     frame.Show()
