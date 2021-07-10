@@ -7,6 +7,7 @@ def SetBlockOnBoard(set_board, block_coords, x, y, block_shape): #boardにblock_
         set_board[piece_y][piece_x] = block_shape
 
 def DrawBlock(copy_board, block_coords, x, y, block_shape):      #ブロックを描写
+    print('DrawBlock + SetBlockOnBoard')
     global board
     global curBlockCoords, curShape, curX, curY
 
@@ -34,7 +35,6 @@ def CheckDelLine(check_board):
     return delLineNumb
 
 def OnKeyDown(event):
-    print('OnKeyDown')
     global isCurBlock, isKeyDown
 
     if keyAllowed is False or isKeyDown is True:
@@ -90,7 +90,7 @@ def OnTimer(event):
         if delLineNumb >= 0 and delLineNumb <= BoardHeight - 1:
             del board[delLineNumb]
             board.insert(0, [0] * BoardWidth)
-            panel.refresh()
+            panel.Refresh()                   #行を削除する際に実行される
         else:
             newShape = random.randint(1, 7)
             newBlockCoords = copy.deepcopy(BlockTable[newShape])
@@ -121,8 +121,9 @@ def OnTimer(event):
 def OnPaint(event):
     print('OnPaint')
     obj = event.GetEventObject()
-    dc = wx.BufferedPaintDC(obj)        #Bufferに描写データ蓄積 => 描写実行 => Clear()
-    dc.Clear()
+    dc = wx.BufferedPaintDC(obj)        #イベント発生 => def OnEraseBackground() => Bufferにデータ蓄積 => 描写実行 => Clear()
+    #print("{0}をClearしたよ".format(dc))
+    dc.Clear()                          #dc = wx.BufferedPaintDCインスタンスobjを消去
 
     for i in range(BoardHeight):
         for j in range(BoardWidth):
@@ -150,7 +151,6 @@ def OnPaint(event):
 
 def OnEraseBackground(event):                                #描写を消去するイベントを処理
     print('OnEraseBackground')
-    pass
 
 def Main():
     global PieceSize
@@ -204,8 +204,8 @@ def Main():
     frame.SetClientSize(PanelWidth, PanelHeight)
     panel = wx.Panel(frame)
     panel.SetBackgroundColour('BLACK')
-    panel.Bind(wx.EVT_PAINT, OnPaint)                      #panel.Refresh(再描写)に発生
-    panel.Bind(wx.EVT_ERASE_BACKGROUND, OnEraseBackground) #panel.Refresh(描写消去)に発生
+    panel.Bind(wx.EVT_PAINT, OnPaint)                      #Refresh(再描写)に発生
+    panel.Bind(wx.EVT_ERASE_BACKGROUND, OnEraseBackground) #Refresh、Clear で発生
     ID_TIMER = 1
     timer = wx.Timer(panel, ID_TIMER)
     panel.Bind(wx.EVT_TIMER, OnTimer, id=ID_TIMER)         #timer.speed(100)毎に発生
@@ -223,30 +223,57 @@ if __name__ == '__main__':
     Main()
     app.MainLoop()
 
-#OnPaint
-#OnEraseBackground
-#OnEraseBackground
-#OnPaint
-#OnTimer
-#OnPaint
-#OnEraseBackground
-#OnTimer
-#OnPaint
-#OnEraseBackground
-#OnTimer
-#OnPaint
-#OnEraseBackground
-#OnTimer
-#OnPaint
-#OnEraseBackground
 
-[
-[[0, 0], [0, 0], [0, 0], [0, 0]],
-[[0, -1], [0, 0], [-1, 0], [-1, 1]],
-[[0, -1], [0, 0], [1, 0], [1, 1]],
-[[0, -1], [0, 0], [0, 1], [0, 2]],
-[[-1, 0], [0, 0], [1, 0], [0, 1]],
-[[0, 0], [1, 0], [0, 1], [1, 1]],
-[[-1, -1], [0, -1], [0, 0], [0, 1]],
-[[1, -1], [0, -1], [0, 0], [0, 1]]
-]
+
+#def OnEraseBackground()      ※frame.Center()
+#↓
+#def OnEraseBackground()      ※frame.Show()
+#↓
+#app.MainLoop()
+#↓
+#def OnPaint()
+#↓
+#def OnTimer()    => time毎の実行(EVT発生=>OnTimer) ※行消去 or 新規Block or Block落下
+#↓
+# def DrawBlock() => Refresh(EVT発生=>OnPaint)
+#↓
+#def OnPaint()    => wx.BufferedPaintDC()  ※旧パネル消去(EVT発生=>OnEraseBackground) + 新パネル描写
+#↓
+# def OnEraseBackground()
+#↓
+#def OnTimer()    => time毎の実行(EVT発生=>OnTimer) ※行消去 or 新規Block or Block落下
+#↓
+# def DrawBlock() => Refresh(EVT発生=>OnPaint)
+#↓
+#def OnPrint()    => wx.BufferedPaintDC()  ※旧パネル消去(EVT発生=>OnEraseBackground) + 新パネル描写
+#↓
+# def OnEraseBackground()
+#↓
+#def OnTimer()    => time毎の実行(EVT発生=>OnTimer) ※行消去 or 新規Block or Block落下
+#↓
+# def DrawBlock() => Refresh(EVT発生=>OnPaint)
+#↓
+#def OnPaint()    => wx.BufferedPaintDC()  ※旧パネル消去(EVT発生=>OnEraseBackground) + 新パネル描写
+#↓
+# def OnEraseBackground()
+#↓
+#def OnTimer()    => time毎の実行(EVT発生=>OnTimer) ※行消去 or 新規Block or Block落下
+#↓
+# def DrawBlock() => Refresh(EVT発生=>OnPaint)
+#↓
+#def OnPaint()    => wx.BufferedPaintDC()  ※旧パネル消去(EVT発生=>OnEraseBackground) + 新パネル描写
+#↓
+# def OnEraseBackground()
+
+
+#[
+#[[0, 0], [0, 0], [0, 0], [0, 0]],
+#[[0, -1], [0, 0], [-1, 0], [-1, 1]],
+#[[0, -1], [0, 0], [1, 0], [1, 1]],
+#[[0, -1], [0, 0], [0, 1], [0, 2]],
+#[[-1, 0], [0, 0], [1, 0], [0, 1]],
+#[[0, 0], [1, 0], [0, 1], [1, 1]],
+#[[-1, -1], [0, -1], [0, 0], [0, 1]],
+#[[1, -1], [0, -1], [0, 0], [0, 1]]
+#]
+#要素を取り出すには、BlockTable[i][j][k] ※三次元配列
